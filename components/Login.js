@@ -1,19 +1,23 @@
-import { Modal, Button, Text, Input, Row, Checkbox, Spacer, Loading } from "@nextui-org/react";
+import { Modal, Button, Text, Input, Row, Checkbox, Loading } from "@nextui-org/react";
 import { Password, Mail } from "./Icons";
 import { useState, useRef } from "react";
 
 export default function Login({ state, close }) {
     const [loading, setLoading] = useState(false);
+    const [errors, setErrors] = useState({ });
     const closeHandler = () => close(false);
-    const email = useRef(null);
     const password = useRef(null);
+    const email = useRef(null);
 
     const submit = () => {
-        console.log(email.current.value)
-        console.log(password.current.value)
-        setLoading(true)
+        const error = {}
+        if (!email.current.value) error = { ...error, Email: 'Please enter a Email' }
+        if (!password.current.value) error = { ...error, Password: 'Please enter a Password' }
+        if (Object.keys(error)[0]) return setErrors(error);
+        console.log({ email: email.current.value, password: password.current.value})
+        setLoading(true);
     }
-    
+
     return (
         <div>
             <Modal closeButton blur open={state} onClose={closeHandler}>
@@ -34,8 +38,10 @@ export default function Login({ state, close }) {
                         placeholder="Email"
                         id="email"
                         ref={email}
-                        clearable={!loading}
                         disabled={loading}
+                        helperColor="error"
+                        helperText={errors.Email}
+                        onChange={() => { if (errors) setErrors({}) }}
                         contentLeft={<Mail fill="currentColor" />}
                     />
                     <Input.Password
@@ -47,10 +53,13 @@ export default function Login({ state, close }) {
                         placeholder="Password"
                         ref={password}
                         disabled={loading}
+                        helperColor="error"
+                        helperText={errors.Password}
+                        onChange={() => { if (errors) setErrors({}) }}
                         contentLeft={<Password fill="currentColor" />}
                     />
                     <Row justify="space-between">
-                        <Checkbox>
+                        <Checkbox defaultSelected={true}>
                             <Text size={14}>Remember me</Text>
                         </Checkbox>
                         <Text size={14}>Forgot password?</Text>
