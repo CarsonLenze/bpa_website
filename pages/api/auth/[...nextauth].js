@@ -6,7 +6,7 @@ import clientPromise from "../../../lib/mongodb"
 
 export const authOptions = {
   // Configure one or more authentication providers
-  adapter: MongoDBAdapter(clientPromise),
+  //adapter: MongoDBAdapter(clientPromise),
   secret: process.env.NEXTAUTH_SECRET,
   providers: [
     CredentialsProvider({
