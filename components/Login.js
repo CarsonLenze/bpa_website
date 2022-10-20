@@ -2,8 +2,10 @@ import { Modal, Button, Text, Input, Row, Checkbox, Loading } from "@nextui-org/
 import { Password, Mail } from "./Icons";
 import { useForm } from 'react-hook-form';
 import { useState,useCallback } from 'react';
+import { useSession, signIn } from "next-auth/react"
 
 export default function Login({ state, close }) {
+    const { data: session } = useSession()
     const [loading, setLoading] = useState(false);
     const [errors, setErrors] = useState({ });
     const closeHandler = () => close(false);
@@ -19,10 +21,15 @@ export default function Login({ state, close }) {
         if (Object.keys(error)[0]) return setErrors(error);
         console.log(data)
         setLoading(true);
+        let test = await signIn('credentials', { redirect: false, email: data.email, password: data.password });
+        console.log(test)
     }, []);
+
+    console.log(session)
 
     return (
         <div>
+            {JSON.stringify(session)}
             <Modal closeButton blur open={state} onClose={closeHandler}>
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <Modal.Header>
