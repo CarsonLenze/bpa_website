@@ -1,31 +1,33 @@
 import { Modal, Button, Text, Input, Row, Checkbox, Loading } from "@nextui-org/react";
-import { Password, Mail } from "./Icons";
-import { useForm } from 'react-hook-form';
-import { useState,useCallback } from 'react';
 import { useSession, signIn } from "next-auth/react";
+import { useState, useCallback } from "react";
+import { useForm } from "react-hook-form";
+import { Password, Mail } from "./Icons";
 
 export default function Login({ state, close }) {
-    const { data: session } = useSession();
-    const [loading, setLoading] = useState(false);
-    const [errors, setErrors] = useState({ });
     const closeHandler = () => close(false);
 
     const { register, reset, handleSubmit } = useForm();
+    const { data: session } = useSession();
+
+    const [loading, setLoading] = useState(false);
+    const [errors, setErrors] = useState({});
 
     const onSubmit = useCallback(async (data) => {
-        const error = {}
-        if (!data.email) error = { ...error, Email: 'Please enter a Email' }
-        if (!data.password) error = { ...error, Password: 'Please enter a Password' }
-        if (Object.keys(error)[0]) return setErrors(error);
+        const newErrors = {}
+        for (const item in data) {
+            if (!data[item]) { newErrors[item] = `Please enter a ${item[0].toUpperCase() + item.slice(1)}`; }
+        }
+        if (Object.keys(newErrors)[0]) return setErrors(newErrors)
+
         setLoading(true);
-        console.log(data)
         signIn('credentials', { redirect: false, email: data.email, password: data.password });
     }, []);
 
     if (state && session) {
+        setLoading(false);
         closeHandler();
         reset();
-        if (loading) setLoading(false);
     }
 
     return (
@@ -36,9 +38,7 @@ export default function Login({ state, close }) {
                     <Modal.Header>
                         <Text size={18}>
                             {'Welcome to '}
-                            <Text b size={18}>
-                                TBD
-                            </Text>
+                            <Text b size={18}>ZAP</Text>
                         </Text>
                     </Modal.Header>
                     <Modal.Body>
@@ -50,7 +50,7 @@ export default function Login({ state, close }) {
                             placeholder="Email"
                             {...register('email')}
                             helperColor="error"
-                            helperText={errors.Email}
+                            helperText={errors.email}
                             onChange={() => { if (errors) setErrors({}) }}
                             contentLeft={<Mail fill="currentColor" />}
                         />
@@ -62,7 +62,7 @@ export default function Login({ state, close }) {
                             placeholder="Password"
                             {...register('password')}
                             helperColor="error"
-                            helperText={errors.Password}
+                            helperText={errors.password}
                             onChange={() => { if (errors) setErrors({}) }}
                             contentLeft={<Password fill="currentColor" />}
                         />
