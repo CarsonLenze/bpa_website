@@ -2,10 +2,10 @@ import { Modal, Button, Text, Input, Row, Checkbox, Loading } from "@nextui-org/
 import { Password, Mail } from "./Icons";
 import { useForm } from 'react-hook-form';
 import { useState,useCallback } from 'react';
-import { useSession, signIn } from "next-auth/react"
+import { useSession, signIn } from "next-auth/react";
 
 export default function Login({ state, close }) {
-    const { data: session } = useSession()
+    const { data: session } = useSession();
     const [loading, setLoading] = useState(false);
     const [errors, setErrors] = useState({ });
     const closeHandler = () => close(false);
@@ -13,8 +13,6 @@ export default function Login({ state, close }) {
     const { register, reset, handleSubmit } = useForm();
 
     const onSubmit = useCallback(async (data) => {
-        //console.log('form data:', data);
-        //reset()
         const error = {}
         if (!data.email) error = { ...error, Email: 'Please enter a Email' }
         if (!data.password) error = { ...error, Password: 'Please enter a Password' }
@@ -24,8 +22,11 @@ export default function Login({ state, close }) {
         signIn('credentials', { redirect: false, email: data.email, password: data.password });
     }, []);
 
-    if (state && session) closeHandler()
-    if (loading && session) setLoading(false)
+    if (state && session) {
+        closeHandler();
+        reset();
+        if (loading) setLoading(false);
+    }
 
     return (
         <div>
