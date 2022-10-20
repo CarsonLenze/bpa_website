@@ -1,8 +1,12 @@
 import NextAuth from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials";
 
+import { MongoDBAdapter } from "@next-auth/mongodb-adapter"
+import clientPromise from "../../../lib/mongodb"
+
 export const authOptions = {
   // Configure one or more authentication providers
+  adapter: MongoDBAdapter(clientPromise),
   providers: [
     CredentialsProvider({
         
@@ -14,6 +18,7 @@ export const authOptions = {
         },
         async authorize(credentials, req) {
             console.log(credentials)
+            //console.log(credentials)
           // Add logic here to look up the user from the credentials supplied
           const user = { id: 1, email: credentials.email, password: credentials.password, frombackend: true }
     

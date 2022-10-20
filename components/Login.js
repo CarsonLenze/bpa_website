@@ -19,13 +19,14 @@ export default function Login({ state, close }) {
         if (!data.email) error = { ...error, Email: 'Please enter a Email' }
         if (!data.password) error = { ...error, Password: 'Please enter a Password' }
         if (Object.keys(error)[0]) return setErrors(error);
-        console.log(data)
         setLoading(true);
-        let test = await signIn('credentials', { redirect: false, email: data.email, password: data.password });
-        console.log(test)
+        console.log(data)
+        signIn('credentials', { redirect: false, email: data.email, password: data.password });
     }, []);
 
-    console.log(session)
+    //if (session.error) console.log()
+
+    //console.log(session)
 
     return (
         <div>

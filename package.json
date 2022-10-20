@@ -9,7 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@next-auth/mongodb-adapter": "^1.1.1",
     "@nextui-org/react": "^1.0.0-beta.10",
+    "mongodb": "^4.11.0",
     "next": "12.3.1",
     "next-auth": "^4.14.0",
     "next-connect": "^0.13.0",
