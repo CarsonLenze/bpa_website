@@ -24,9 +24,8 @@ export default function Login({ state, close }) {
         signIn('credentials', { redirect: false, email: data.email, password: data.password });
     }, []);
 
-    //if (session.error) console.log()
-
-    //console.log(session)
+    if (state && session) closeHandler()
+    if (loading && session) setLoading(false)
 
     return (
         <div>
