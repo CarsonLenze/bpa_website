@@ -1,14 +1,13 @@
 import { Modal, Button, Text, Input, Row, Checkbox, Loading } from "@nextui-org/react";
-import { useSession, signIn } from "next-auth/react";
 import { useState, useCallback } from "react";
 import { useForm } from "react-hook-form";
+import { signIn } from "next-auth/react";
 import { Password, Mail } from "./Icons";
 
 export default function Login({ state, close }) {
     const closeHandler = () => close(false);
 
-    const { register, reset, handleSubmit } = useForm();
-    const { data: session } = useSession();
+    const { register, handleSubmit } = useForm();
 
     const [loading, setLoading] = useState(false);
     const [errors, setErrors] = useState({});
@@ -21,18 +20,20 @@ export default function Login({ state, close }) {
         if (Object.keys(newErrors)[0]) return setErrors(newErrors)
 
         setLoading(true);
-        signIn('credentials', { redirect: false, email: data.email, password: data.password });
+        await signIn('credentials', { redirect: false, email: data.email, password: data.password });
     }, []);
 
-    if (state && session) {
-        setLoading(false);
-        closeHandler();
-        reset();
-    }
+    const formItemProps = {
+        size: 'lg',
+        color: 'primary',
+        helperColor: 'error',
+        bordered: true,
+        fullWidth: true,
+        onChange: () => { if (errors) setErrors({}) }
+      };
 
     return (
         <div>
-            {JSON.stringify(session)}
             <Modal closeButton blur open={state} onClose={closeHandler}>
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <Modal.Header>
@@ -43,28 +44,18 @@ export default function Login({ state, close }) {
                     </Modal.Header>
                     <Modal.Body>
                         <Input
-                            bordered
-                            fullWidth
-                            color="primary"
-                            size="lg"
                             placeholder="Email"
-                            {...register('email')}
-                            helperColor="error"
-                            helperText={errors.email}
-                            onChange={() => { if (errors) setErrors({}) }}
                             contentLeft={<Mail fill="currentColor" />}
+                            helperText={errors.email}
+                            {...register('email')}
+                            {...formItemProps}
                         />
                         <Input.Password
-                            bordered
-                            fullWidth
-                            color="primary"
-                            size="lg"
                             placeholder="Password"
-                            {...register('password')}
-                            helperColor="error"
-                            helperText={errors.password}
-                            onChange={() => { if (errors) setErrors({}) }}
                             contentLeft={<Password fill="currentColor" />}
+                            helperText={errors.password}
+                            {...register('password')}
+                            {...formItemProps}
                         />
                         <Row justify="space-between">
                             <Checkbox defaultSelected={true}>

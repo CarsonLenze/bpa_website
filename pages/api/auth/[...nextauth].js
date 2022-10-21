@@ -15,7 +15,7 @@ export const authOptions = {
           password: { label: "Password", type: "password" }
         },
         async authorize(credentials, req) {
-            console.log(credentials)
+            //console.log(credentials)
             //console.log(credentials)
           // Add logic here to look up the user from the credentials supplied
           const user = { id: 1, email: credentials.email, password: credentials.password, frombackend: true }
