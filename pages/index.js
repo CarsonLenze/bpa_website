@@ -18,6 +18,7 @@ export default function App() {
   if (visible && session) {
     setVisible(false)
   }
+  console.log(session)
 
   return (
     <Box>
