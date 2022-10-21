@@ -22,7 +22,7 @@ export default function App() {
   return (
     <Box>
       <Login state={visible} close={setVisible} session={session} />
-      {!session ?
+      {session ?
         <Button auto color="gradient" shadow onClick={() => signOut()}>
           Logout
         </Button>
