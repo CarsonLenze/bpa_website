@@ -1,7 +1,7 @@
 import { Modal, Button, Text, Input, Row, Checkbox, Loading } from "@nextui-org/react";
 import { useState, useCallback } from "react";
 import { useForm } from "react-hook-form";
-import { signIn, getSession } from "next-auth/react";
+import { signIn } from "next-auth/react";
 import { Password, Mail } from "./Icons";
 
 export default function Login({ state, close }) {
@@ -17,17 +17,13 @@ export default function Login({ state, close }) {
         }
 
         setLoading(true);
-        await signIn('credentials', { redirect: false, email: data.email, password: data.password });
-        const session = await getSession();
-        console.log(session)
-        if (session) {
-            setLoading(false);
-            if (session.user.error) {
-                return setError({ text: session.user.error });
-            } else {
-                closeHandler();
-                reset();
-            }
+        const callback = await signIn('credentials', { redirect: false, email: data.email, password: data.password });
+        setLoading(false);
+        if (callback.error) {
+            return setError({ text: JSON.parse(callback.error).error });
+        } else {
+            closeHandler();
+            reset();
         }
     }, []);
 
