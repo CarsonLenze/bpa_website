@@ -5,31 +5,30 @@ import { useState } from "react";
 
 export default function App() {
   const [visible, setVisible] = useState(false);
-  const { data: session } = useSession();
-  const handler = () => setVisible(true)
+  //let session = useSession();
 
+  const handler = () => setVisible(true)
   const Box = styled('div', {
     size: '100%',
     dflex: 'center',
     minWidth: '100vw',
     minHeight: '100vh'
   });
-
-  if (visible && session) {
-    setVisible(false)
-  }
-  console.log(session)
+  //if (visible) session.data = null
 
   return (
     <Box>
-      <Login state={visible} close={setVisible} session={session} />
-      {session ?
+      <Login state={visible} close={setVisible} />
+      {/* {session.data ?
         <Button auto color="gradient" shadow onClick={() => signOut()}>
           Logout
         </Button>
         : <Button auto color="gradient" shadow onClick={handler}>
           Login
-        </Button>}
+        </Button>} */}
+        <Button auto color="gradient" shadow onClick={handler}>
+          Login
+        </Button>
     </Box>
   );
 }
